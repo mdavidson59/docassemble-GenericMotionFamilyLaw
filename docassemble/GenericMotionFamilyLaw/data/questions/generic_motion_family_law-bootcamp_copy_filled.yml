@@ -1,0 +1,318 @@
+include:
+  - docassemble.AssemblyLine:al_package.yml
+  - docassemble.MassAccess:massaccess.yml
+---
+comment: |
+  The metadata section controls the tab title and saved interview title. You can delete this section if you include this YAML file in another YAML file.
+metadata:
+  title: |
+    Generic motion family law-bootcamp copy filled
+  short title: |
+    Generic motion family law-bootcamp copy filled
+  tags:
+    - FA-00-00-00-00
+---
+comment: |
+  This section is used by AssemblyLine to control how some of the questions work.
+mandatory: True
+code: |
+  interview_metadata # make sure we initialize the object
+  if not defined("interview_metadata['generic_motion_family_lawbootcamp_copy_filled']"):
+    interview_metadata.initializeObject('generic_motion_family_lawbootcamp_copy_filled')
+  interview_metadata['generic_motion_family_lawbootcamp_copy_filled'].update({
+    'title': 'Generic motion family law-bootcamp copy filled',
+    'short title': 'Generic motion family law-bootcamp copy filled',
+    'description': 'Generic motion family law-bootcamp copy filled',
+    'original_form': '',
+    'allowed courts': [
+    ],
+    'categories': [
+      'FA-00-00-00-00',
+    ],
+    'logic block variable': 'generic_motion_family_lawbootcamp_copy_filled',
+    'attachment block variable': 'generic_motion_family_lawbootcamp_copy_filled_attachment',
+    'typical role': 'unknown',
+  })
+---
+code: |
+  interview_short_title = 'File a Generic motion family law-bootcamp'
+---
+code: |
+  al_form_type = 'existing_case'
+---
+features:
+  navigation: True
+---
+sections:
+  - review_generic_motion_family_lawbootcamp_copy_filled: Review your answers
+---
+objects:
+  - users: ALPeopleList.using(there_are_any=True)
+  - plaintiffs: ALPeopleList.using(there_are_any=True)
+  - defendants: ALPeopleList.using(there_are_any=True)
+
+---
+mandatory: True
+id: main_order_generic_motion_family_lawbootcamp_copy_filled
+code: |
+  # Controls the flow of the basic building blocks of the
+  # interview. To use this interview in another interview
+  # delete the `mandatory: True` specifier or this whole block.
+  al_intro_screen  # Organization intro screen/splash screen
+  # Introduction to this specific interview
+  generic_motion_family_lawbootcamp_copy_filled_intro
+  # Trigger the whole interview order block to control question order
+  interview_order_generic_motion_family_lawbootcamp_copy_filled
+  signature_date
+  # Save (anonymized) interview statistics.
+  store_variables_snapshot(data={'zip': users[0].address.zip})
+  generic_motion_family_lawbootcamp_copy_filled_preview_question  # Pre-canned preview screen
+  basic_questions_signature_flow
+  users[0].signature
+  generic_motion_family_lawbootcamp_copy_filled_download
+---
+id: interview_order_generic_motion_family_lawbootcamp_copy_filled
+code: |
+  # This is a placeholder to control order of questions in this interview
+  # Set the allowed courts for this interview
+  allowed_courts = interview_metadata["generic_motion_family_lawbootcamp_copy_filled"]["allowed courts"]
+  nav.set_section('review_generic_motion_family_lawbootcamp_copy_filled')
+  # Below sets the user_role by asking a question.
+  # You can set user_role directly instead to either 'plaintiff' or 'defendant'
+  user_ask_role
+  user_is_defendant
+  emergency
+  hearing_city
+  # Set the answer file name.
+  set_parts(subtitle=str(users))
+  trial_court.division
+  docket_numbers.gather()
+  set_progress(10.0)
+  plaintiffs.gather()
+  defendants.gather()
+  users.gather()
+  set_progress(20.0)
+  set_progress(30.0)
+  users[0].address.address
+  set_progress(40.0)
+  users[0].phone_number
+  interview_order_generic_motion_family_lawbootcamp_copy_filled = True
+---
+comment: |
+  This question is used to introduce your interview. Please customize
+id: Generic motion family law-bootcamp copy filled
+continue button field: generic_motion_family_lawbootcamp_copy_filled_intro
+question: |
+  Generic motion family law-bootcamp copy filled
+subquestion: |
+  Generic motion family law-bootcamp copy filled
+---
+id: Review your form before you sign it
+continue button field: generic_motion_family_lawbootcamp_copy_filled_preview_question
+question: |
+  Review your form before you sign it
+subquestion: |
+  Here is a preview of the form you'll sign on the next page. 
+  
+   ${ al_user_bundle.as_pdf(key='preview') }
+  
+  Remember to come back to this window to continue and sign your form.
+---
+id: Some questions about you
+question: |
+  Some questions about you
+fields:
+  - 'Are you the defendant?': user_is_defendant
+    datatype: yesno
+  - 'Are you the petitioner?': user_is_petitioner
+    datatype: yesno
+  - 'Are you the plaintiff?': user_is_plaintiff
+    datatype: yesno
+  - 'Are you the respondent?': user_is_respondent
+    datatype: yesno
+---
+id: What is your request
+question: |
+  What is your request
+fields:
+  - 'Emergency': emergency
+    maxlength: 34
+  - 'Motion name': motion_name
+    maxlength: 215
+  - 'User request': user_request
+    maxlength: 1196
+---
+id: Hearing information
+question: |
+  Hearing information
+fields:
+  - 'Hearing city': hearing_city
+    maxlength: 40
+  - 'Hearing date month day year': hearing_date_month_day_year
+    datatype: date
+  - 'Hearing time': hearing_time
+    datatype: date
+  - 'Bbo number': bbo_number
+    maxlength: 30
+---
+progress: 100
+id: download
+event: generic_motion_family_lawbootcamp_copy_filled_download
+question: |
+  Your form is ready to download.
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  Below is a preview of your form.
+  
+  ${ al_user_bundle.download_list_html() }
+  
+  ${ al_user_bundle.send_button_html() }
+---
+objects:
+  - generic_motion_family_lawbootcamp_copy_filled_attachment: ALDocument.using(title="Generic motion family law-bootcamp copy filled", filename="generic_motion_family_law-bootcamp_copy_filled", enabled=True, has_addendum=False)
+---
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[generic_motion_family_lawbootcamp_copy_filled_attachment], filename="generic_motion_family_law-bootcamp_copy_filled.pdf", title="All forms to download for your records")
+  - al_court_bundle: ALDocumentBundle.using(elements=[generic_motion_family_lawbootcamp_copy_filled_attachment], filename="generic_motion_family_law-bootcamp_copy_filled.pdf", title="All forms to download for your records")
+---
+attachment:
+    variable name: generic_motion_family_lawbootcamp_copy_filled_attachment[i]
+    name: Generic motion family law-bootcamp copy filled
+    filename: Generic-motion-family-lawbootcamp-copy-filled
+    skip undefined: True
+    pdf template file: generic_motion_family_law-bootcamp_copy_filled.pdf
+    fields: 
+      - "trial_court_division": ${ trial_court.division }
+      - "docket_number": ${ docket_numbers[0] }
+      - "plaintiff": ${ plaintiffs[0] }
+      - "defendant": ${ defendants[0] }
+      - "user_name": ${ users[0] }
+      # It's a signature: test which file version this is; leave empty unless it's the final version)
+      - "user_signature": ${ users[0].signature if i == 'final' else '' }
+      - "signature_date__1": ${ signature_date }
+      - "user_name__2": ${ users[0] }
+      - "user_address_line_one": ${ users[0].address.line_one() }
+      - "user_address_city": ${ users[0].address.city }
+      - "user_address_state": ${ users[0].address.state }
+      - "user_address_zip": ${ users[0].address.zip }
+      - "user_phone": ${ users[0].phone_number }
+      - "emergency": ${ emergency }
+      - "motion_name": ${ motion_name }
+      - "user_is_defendant": ${ user_is_defendant }
+      - "user_is_petitioner": ${ user_is_petitioner }
+      - "user_is_plaintiff": ${ user_is_plaintiff }
+      - "user_is_respondent": ${ user_is_respondent }
+      - "user_request": ${ user_request }
+      - "hearing_city": ${ hearing_city }
+      - "hearing_date_month_day_year": ${ hearing_date_month_day_year }
+      - "hearing_time": ${ hearing_time }
+      - "bbo_number": ${ bbo_number }
+---
+id: generic_motion_family_lawbootcamp_copy_filled review screen
+event: review_generic_motion_family_lawbootcamp_copy_filled
+question: |
+  Review Screen
+subquestion: |
+  Edit your answers below
+review: 
+  - Edit: emergency
+    button: |
+      **Emergency**:
+      ${ emergency }
+  - Edit: motion_name
+    button: |
+      **Motion name**:
+      ${ motion_name }
+  - Edit: user_is_defendant
+    button: |
+      **Are you the defendant?**:
+      ${ word(yesno(user_is_defendant)) }
+  - Edit: user_is_petitioner
+    button: |
+      **Are you the petitioner?**:
+      ${ word(yesno(user_is_petitioner)) }
+  - Edit: user_is_plaintiff
+    button: |
+      **Are you the plaintiff?**:
+      ${ word(yesno(user_is_plaintiff)) }
+  - Edit: user_is_respondent
+    button: |
+      **Are you the respondent?**:
+      ${ word(yesno(user_is_respondent)) }
+  - Edit: user_request
+    button: |
+      **User request**:
+      ${ user_request }
+  - Edit: hearing_city
+    button: |
+      **Hearing city**:
+      ${ hearing_city }
+  - Edit: hearing_date_month_day_year
+    button: |
+      **Hearing date month day year**:
+      ${ hearing_date_month_day_year }
+  - Edit: hearing_time
+    button: |
+      **Hearing time**:
+      ${ hearing_time }
+  - Edit: bbo_number
+    button: |
+      **Bbo number**:
+      ${ bbo_number }
+  - Edit: trial_court.division
+    button: |
+      **trial_court.division**:
+      ${ trial_court.division }
+  - Edit: docket_numbers[0].name.first
+    button: |
+      **docket_numbers**
+
+      % for my_var in docket_numbers:
+        * ${ my_var }
+      % endfor
+    # NOTE: a question block with 'docket_numbers.revisit'
+    # lets the user edit all of the items at once
+  - Edit: plaintiffs[0].name.first
+    button: |
+      **plaintiffs**
+
+      % for my_var in plaintiffs:
+        * ${ my_var }
+      % endfor
+    # NOTE: a question block with 'plaintiffs.revisit'
+    # lets the user edit all of the items at once
+  - Edit: defendants[0].name.first
+    button: |
+      **defendants**
+
+      % for my_var in defendants:
+        * ${ my_var }
+      % endfor
+    # NOTE: a question block with 'defendants.revisit'
+    # lets the user edit all of the items at once
+  - Edit: users[0].name.first
+    button: |
+      **users**
+
+      % for my_var in users:
+        * ${ my_var }
+      % endfor
+    # NOTE: a question block with 'users.revisit'
+    # lets the user edit all of the items at once
+  - Edit: users[0].signature
+    button: |
+      **users[0].signature**:
+      ${ users[0].signature }
+  - Edit: signature_date
+    button: |
+      **signature_date**:
+      ${ signature_date }
+  - Edit: users[0].address.address
+    button: |
+      **users[0].address.address**:
+      ${ users[0].address.line_one() }
+  - Edit: users[0].phone_number
+    button: |
+      **users[0].phone_number**:
+      ${ users[0].phone_number }
